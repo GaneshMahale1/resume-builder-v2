@@ -8,6 +8,14 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    rollupOptions: {
+      input: {
+        main: './src/main.jsx'
+      },
+      output: {
+        manualChunks: undefined
+      }
+    }
   },
   server: {
     port: 5174,

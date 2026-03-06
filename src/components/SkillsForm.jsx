@@ -1,6 +1,39 @@
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 function SkillsForm({ resumeData, updateSkill, addSkill, removeSkill }) {
+  const [errors, setErrors] = useState([])
+  const [touched, setTouched] = useState([])
+
+  const validateField = (index, value) => {
+    setErrors(prev => {
+      const next = [...prev]
+      const item = { ...(next[index] || {}) }
+      if (value && value.trim().length > 50) {
+        item.skill = 'Skill name should be 50 characters or less'
+      } else {
+        delete item.skill
+      }
+      next[index] = item
+      return next
+    })
+  }
+
+  const handleBlur = (index) => {
+    setTouched(prev => {
+      const next = [...prev]
+      next[index] = true
+      return next
+    })
+    validateField(index, resumeData.skills[index])
+  }
+
+  const handleChange = (index, value) => {
+    updateSkill(index, value)
+    if (touched[index]) validateField(index, value)
+  }
+
   return (
     <div className="w-full py-4 sm:py-6 lg:py-8 xl:py-12">
       <div className="w-full bg-white rounded-xl shadow-lg mx-0.5 sm:mx-1 md:mx-2 lg:mx-3 xl:mx-4 2xl:mx-6 p-4 sm:p-6 lg:p-8 xl:p-10 2xl:p-12">
@@ -14,16 +47,20 @@ function SkillsForm({ resumeData, updateSkill, addSkill, removeSkill }) {
 
         <div className="mb-4 sm:mb-6 lg:mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-            {resumeData.skills.map((skill, index) => (
-              <div key={index} className="flex items-center space-x-2">
+            {(resumeData?.skills || []).map((skill, index) => (
+              <div key={`skill-${index}`} className="flex items-center space-x-2">
                 <input
                   type="text"
                   placeholder="e.g., JavaScript, React, Python"
                   value={skill}
-                  onChange={(e) => updateSkill(index, e.target.value)}
-                  className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 text-sm sm:text-base"
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onBlur={() => handleBlur(index)}
+                  className={`flex-1 p-2 sm:p-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 text-sm sm:text-base ${errors[index]?.skill && touched[index] ? 'border-red-500' : 'border-gray-300'}`}
                 />
-                {resumeData.skills.length > 1 && (
+                {errors[index]?.skill && touched[index] && (
+                  <span className="text-xs text-red-600 w-full">{errors[index].skill}</span>
+                )}
+                {(resumeData?.skills || []).length > 1 && (
                   <button
                     onClick={() => removeSkill(index)}
                     className="text-red-500 hover:text-red-700 p-2 sm:p-3 rounded text-sm sm:text-base"
@@ -58,21 +95,30 @@ function SkillsForm({ resumeData, updateSkill, addSkill, removeSkill }) {
 
         <div className="mt-6 sm:mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 lg:gap-6">
           <Link
-            to="/experience"
+            to="/research-interest"
             className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8 rounded-lg transition duration-200 text-center text-sm sm:text-base lg:text-lg"
           >
-            ← Back to Experience
+            ← Back to Research Interest
           </Link>
           <Link
-            to="/preview"
+            to="/technicalskills"
             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8 rounded-lg transition duration-200 text-center text-sm sm:text-base lg:text-lg"
           >
-            Next: Preview →
+            Next: Technical Skills →
           </Link>
         </div>
       </div>
     </div>
   )
+}
+
+SkillsForm.propTypes = {
+  resumeData: PropTypes.shape({
+    skills: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  updateSkill: PropTypes.func.isRequired,
+  addSkill: PropTypes.func.isRequired,
+  removeSkill: PropTypes.func.isRequired,
 }
 
 export default SkillsForm

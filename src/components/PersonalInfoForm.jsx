@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 function PersonalInfoForm({ resumeData, updatePersonalInfo }) {
   const [errors, setErrors] = useState({})
@@ -28,7 +29,7 @@ function PersonalInfoForm({ resumeData, updatePersonalInfo }) {
         }
         break
       case 'phone':
-        if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/[\s\-\(\)]/g, ''))) {
+        if (value && !/^[+]?\d[\d\s\-()]{0,15}$/.test(value)) {
           newErrors.phone = 'Please enter a valid phone number'
         } else {
           delete newErrors.phone
@@ -39,6 +40,11 @@ function PersonalInfoForm({ resumeData, updatePersonalInfo }) {
     }
 
     setErrors(newErrors)
+  }
+
+  const handleFieldBlur = (field) => {
+    setTouched(prev => ({ ...prev, [field]: true }))
+    validateField(field, resumeData.personalInfo[field])
   }
 
   const handleFieldChange = (field, value) => {
@@ -178,6 +184,19 @@ function PersonalInfoForm({ resumeData, updatePersonalInfo }) {
       </div>
     </div>
   )
+}
+
+PersonalInfoForm.propTypes = {
+  resumeData: PropTypes.shape({
+    personalInfo: PropTypes.shape({
+      name: PropTypes.string,
+      email: PropTypes.string,
+      phone: PropTypes.string,
+      address: PropTypes.string,
+      summary: PropTypes.string,
+    }),
+  }).isRequired,
+  updatePersonalInfo: PropTypes.func.isRequired,
 }
 
 export default PersonalInfoForm

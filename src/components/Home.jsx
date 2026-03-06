@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 function Home() {
   return (
@@ -38,6 +39,46 @@ function Home() {
           </div>
 
           <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">🏆</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Achievements</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">Add awards, honors, and notable achievements</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">📚</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Coursework</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">List relevant coursework and projects</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">📄</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Publications</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">List your research publications</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">🔬</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Research</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">Describe your research experience</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">🧠</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Research Interest</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">Describe your research interests</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <span className="text-white text-lg sm:text-xl">⚡</span>
             </div>
@@ -46,7 +87,15 @@ function Home() {
           </div>
 
           <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="text-white text-lg sm:text-xl">💻</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Technical Skills</h3>
+            <p className="text-gray-600 text-xs sm:text-sm">List programming languages and tools</p>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <span className="text-white text-lg sm:text-xl">👁️</span>
             </div>
             <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Preview</h3>
@@ -54,7 +103,7 @@ function Home() {
           </div>
 
           <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <span className="text-white text-lg sm:text-xl">📄</span>
             </div>
             <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Export</h3>
@@ -76,5 +125,7 @@ function Home() {
     </div>
   )
 }
+
+Home.propTypes = {}
 
 export default Home

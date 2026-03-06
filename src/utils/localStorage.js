@@ -79,8 +79,10 @@ export const deleteTemplate = (templateId) => {
 };
 
 export const exportResumeAsJSON = (resumeData) => {
-  try {
-    const dataStr = JSON.stringify(resumeData, null, 2);
+  try {    if (!resumeData || !resumeData.personalInfo) {
+      console.error('Invalid resume data for export')
+      return false
+    }    const dataStr = JSON.stringify(resumeData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
@@ -104,7 +106,7 @@ export const importResumeFromJSON = (file) => {
       try {
         const resumeData = JSON.parse(e.target.result);
         resolve(resumeData);
-      } catch (error) {
+      } catch {
         reject(new Error('Invalid JSON file'));
       }
     };

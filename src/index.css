@@ -2,15 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens */
+:root {
+  --color-accent: #6366f1; /* indigo-500 */
+  --card-radius: 12px;
+  --card-bg: #ffffff;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #6b7280;
+}
+
+/* Accent utilities */
+.accent-text {
+  color: var(--color-accent);
+}
+.accent-bg {
+  background-color: var(--color-accent);
+}
+
+/* Smooth interactions */
+.ui-transition {
+  transition: all 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Utility to hide scrollbars for overflowed nav */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Prose tweaks for printed resumes */
+@media print {
+  .no-print { display: none !important; }
+  .print-page-break { page-break-inside: avoid; }
+}
+
 /* Test styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Use theme variables */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.card-surface {
+  background-color: var(--surface);
+}
+
+.muted {
+  color: var(--muted);
 }
 
 code {
@@ -57,8 +110,23 @@ a:hover {
   }
 }
 
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-slide-in-right {
   animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.2s ease-out;
 }
 
 body {

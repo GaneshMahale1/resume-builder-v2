@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useNavigate, Link } from 'react-router-dom'
 
 function Login() {
@@ -71,12 +72,21 @@ function Login() {
 
     setIsLoading(true)
 
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Demo mode - accept any credentials
+      if (!formData.email || !formData.password) {
+        throw new Error('Email and password are required')
+      }
 
-      // For demo purposes, any email/password combination works
-      console.log('Login successful for:', formData.email)
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Store demo token
+      localStorage.setItem('resumeBuilder_token', 'demo-token-' + Date.now())
+      localStorage.setItem('resumeBuilder_user', JSON.stringify({
+        name: formData.email.split('@')[0],
+        email: formData.email
+      }))
 
       // Store remember me preference
       if (formData.rememberMe) {
@@ -88,24 +98,48 @@ function Login() {
       navigate('/dashboard')
     } catch (error) {
       console.error('Login error:', error)
-      setErrors({ general: 'Login failed. Please try again.' })
+      setErrors({ general: error.message || 'Login failed. Please try again.' })
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSocialLogin = (provider) => {
+  const handleSocialLogin = async (provider) => {
     setIsLoading(true)
-    // Simulate social login
-    setTimeout(() => {
-      console.log(`${provider} login successful`)
-      navigate('/dashboard')
-    }, 1000)
+    try {
+      // Redirect to OAuth provider
+      window.location.href = `http://localhost:4000/api/auth/${provider.toLowerCase()}`
+    } catch (error) {
+      console.error('Social login error:', error)
+      setErrors({ general: `${provider} login failed. Please try again.` })
+      setIsLoading(false)
+    }
   }
 
-  const handleForgotPassword = () => {
-    // In a real app, this would open a forgot password modal or navigate to a reset page
-    alert('Forgot password functionality would be implemented here')
+  const handleForgotPassword = async () => {
+    const email = prompt('Enter your email address for password reset:')
+    if (!email) return
+
+    try {
+      const response = await fetch('http://localhost:4000/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert('Password reset link sent to your email!')
+      } else {
+        alert(data.error || 'Failed to send reset link')
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error)
+      alert('Failed to send reset link. Please try again.')
+    }
   }
 
   return (
@@ -359,18 +393,18 @@ function Login() {
               <button
                 type="button"
                 className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-                onClick={() => alert('Sign up functionality would be implemented here')}
+                onClick={() => navigate('/register')}
               >
                 Sign up for free
               </button>
             </p>
           </div>
 
-          {/* Demo Notice */}
+          {/* Demo Mode Notice */}
           <div className="text-center">
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-3">
-              <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300">
-                <span className="font-medium">Demo Mode:</span> Use any email and password to continue
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-3">
+              <p className="text-xs sm:text-sm text-green-800 dark:text-green-300">
+                <span className="font-medium">Demo Mode Active:</span> Any email/password works for testing
               </p>
             </div>
           </div>
@@ -379,5 +413,7 @@ function Login() {
     </div>
   )
 }
+
+Login.propTypes = {}
 
 export default Login

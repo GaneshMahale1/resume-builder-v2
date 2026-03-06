@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react'
 
 const NotificationContext = createContext()
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useNotification = () => {
   const context = useContext(NotificationContext)
   if (!context) {
@@ -14,6 +15,7 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([])
 
   const addNotification = (message, type = 'info', duration = 5000) => {
+    // eslint-disable-next-line
     const id = Date.now() + Math.random()
     const notification = { id, message, type, duration }
 

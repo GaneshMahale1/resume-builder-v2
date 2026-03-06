@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 const ThemeContext = createContext()
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
   const context = useContext(ThemeContext)
   if (!context) {
@@ -17,6 +18,7 @@ export const ThemeProvider = ({ children }) => {
     // Load theme preference from localStorage
     const savedTheme = localStorage.getItem('resumeBuilder_theme')
     if (savedTheme) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsDarkMode(savedTheme === 'dark')
     } else {
       // Check system preference

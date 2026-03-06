@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import {
-  saveResumeToLocalStorage,
   loadResumeFromLocalStorage,
   saveResumeAsTemplate,
   getSavedTemplates,
@@ -36,18 +36,23 @@ function ResumeDashboard({ resumeData, setResumeData }) {
     // Initial validation
     const validationResult = validateResume(resumeData)
     setValidation(validationResult)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    // Auto-save and validate on data changes
-    if (resumeData.personalInfo.name || resumeData.education.length > 1 || resumeData.experience.length > 1 || resumeData.skills.length > 1) {
-      autoSaveResume(resumeData)
-      setLastSaved(new Date().toISOString())
-
-      const validationResult = validateResume(resumeData)
-      setValidation(validationResult)
-    }
+    // Auto-save and validate on any data changes
+    autoSaveResume(resumeData)
+    setLastSaved(new Date().toISOString())
+    const validationResult = validateResume(resumeData)
+    setValidation(validationResult)
   }, [resumeData])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      // clearAutoSave cleanup happens here if needed
+    }
+  }, [])
 
   const handleSaveTemplate = () => {
     if (!templateName.trim()) {
@@ -70,9 +75,16 @@ function ResumeDashboard({ resumeData, setResumeData }) {
       personalInfo: template.personalInfo || { name: '', email: '', phone: '', address: '' },
       education: template.education || [{ school: '', degree: '', year: '' }],
       experience: template.experience || [{ company: '', position: '', duration: '', description: '' }],
-      skills: template.skills || ['']
+      skills: template.skills || [''],
+      achievements: template.achievements || '',
+      coursework: template.coursework || '',
+      publications: template.publications || '',
+      research: template.research || '',
+      researchInterest: template.researchInterest || '',
+      technicalSkills: template.technicalSkills || ['']
     })
     setShowTemplates(false)
+    showSuccess('Template loaded successfully!', 3000)
   }
 
   const handleDeleteTemplate = (templateId) => {
@@ -88,7 +100,12 @@ function ResumeDashboard({ resumeData, setResumeData }) {
   }
 
   const handleExportJSON = () => {
-    exportResumeAsJSON(resumeData)
+    const success = exportResumeAsJSON(resumeData)
+    if (success) {
+      showSuccess('Resume exported successfully!', 3000)
+    } else {
+      showError('Failed to export resume', 3000)
+    }
   }
 
   const handleImportJSON = (event) => {
@@ -180,14 +197,69 @@ function ResumeDashboard({ resumeData, setResumeData }) {
           </Link>
 
           <Link
-            to="/skills"
-            className="bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-lg p-4 sm:p-6 transition duration-200"
+            to="/achievements"
+            className="bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded-lg p-4 sm:p-6 transition duration-200"
           >
             <div className="flex items-center mb-3 sm:mb-4">
-              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">⚡</span>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Skills</h3>
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">🏆</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Achievements</h3>
             </div>
-            <p className="text-gray-600 text-xs sm:text-sm">Edit your skills and expertise</p>
+            <p className="text-gray-600 text-xs sm:text-sm">Add awards and honors</p>
+          </Link>
+
+          <Link
+            to="/coursework"
+            className="bg-pink-50 hover:bg-pink-100 border border-pink-200 rounded-lg p-4 sm:p-6 transition duration-200"
+          >
+            <div className="flex items-center mb-3 sm:mb-4">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-pink-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">📚</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Coursework</h3>
+            </div>
+            <p className="text-gray-600 text-xs sm:text-sm">List relevant coursework</p>
+          </Link>
+
+          <Link
+            to="/publications"
+            className="bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg p-4 sm:p-6 transition duration-200"
+          >
+            <div className="flex items-center mb-3 sm:mb-4">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">📄</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Publications</h3>
+            </div>
+            <p className="text-gray-600 text-xs sm:text-sm">Manage your publications</p>
+          </Link>
+
+          <Link
+            to="/research"
+            className="bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 rounded-lg p-4 sm:p-6 transition duration-200"
+          >
+            <div className="flex items-center mb-3 sm:mb-4">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-cyan-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">🔬</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Research</h3>
+            </div>
+            <p className="text-gray-600 text-xs sm:text-sm">Describe your research</p>
+          </Link>
+
+          <Link
+            to="/research-interest"
+            className="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg p-4 sm:p-6 transition duration-200"
+          >
+            <div className="flex items-center mb-3 sm:mb-4">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">🧠</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Research Interest</h3>
+            </div>
+            <p className="text-gray-600 text-xs sm:text-sm">Update research interests</p>
+          </Link>
+
+          <Link
+            to="/technicalskills"
+            className="bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg p-4 sm:p-6 transition duration-200"
+          >
+            <div className="flex items-center mb-3 sm:mb-4">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3">💻</span>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Technical Skills</h3>
+            </div>
+            <p className="text-gray-600 text-xs sm:text-sm">Edit technical skills</p>
           </Link>
 
           <Link
@@ -361,6 +433,11 @@ function ResumeDashboard({ resumeData, setResumeData }) {
       </div>
     </div>
   )
+}
+
+ResumeDashboard.propTypes = {
+  resumeData: PropTypes.object.isRequired,
+  setResumeData: PropTypes.func.isRequired,
 }
 
 export default ResumeDashboard

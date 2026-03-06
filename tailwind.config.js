@@ -7,7 +7,17 @@ export default {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', ' -apple-system', 'Segoe UI', 'Roboto'],
+      },
+      colors: {
+        accent: 'var(--color-accent)',
+      },
+      boxShadow: {
+        soft: '0 6px 18px rgba(15, 23, 42, 0.06)',
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

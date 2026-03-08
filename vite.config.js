@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: mode === 'production' ? '/resume-builder/' : '/',
+  base: mode === 'production' ? '/resume-builder-v2/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => ({
         main: './src/main.jsx'
       },
       output: {
-        manualChunks: undefined
+        manualChunks: undefined,
+        assetFileNames: 'assets/[name].[ext]'
       }
     }
   },

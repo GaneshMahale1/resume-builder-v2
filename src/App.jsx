@@ -135,7 +135,7 @@ function App() {
     <ErrorBoundary>
       <NotificationProvider>
         <ThemeProvider>
-          <Router basename="/resume-builder">
+          <Router basename="/resume-builder-v2">
             <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
               <Header />
             <main className="flex-1 w-full">

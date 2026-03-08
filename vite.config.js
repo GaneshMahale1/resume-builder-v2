@@ -14,7 +14,9 @@ export default defineConfig(({ mode }) => ({
       },
       output: {
         manualChunks: undefined,
-        assetFileNames: 'assets/[name].[ext]'
+        assetFileNames: 'assets/[name].[ext]',
+        chunkFileNames: 'assets/[name].js',
+        entryFileNames: 'assets/[name].js'
       }
     }
   },
